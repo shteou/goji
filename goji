@@ -43,6 +43,10 @@ class Goji(object):
     failed    - The job failed and can be requeued
     unknown   - Job is missing and success/failure cannot be determined
 ''')
+    parser.add_argument('--repository')
+    args = parser.parse_args(sys.argv[2:])
+    print(args)
+
 
   def requeue(self):
     pass
