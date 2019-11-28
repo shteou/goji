@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import os
 import sys
 
 def move_job(file, state, next_state):
@@ -12,6 +13,11 @@ def apply_job(file):
 def apply_jobs():
   pass
 
+def make_empty_git_dir(dir_name):
+  os.makedirs(dir_name)
+  f = open(os.path.join(dir_name, ".gitkeep"), "w+")
+  f.close()
+
 class Goji(object):
   def __init__(self):
     parser = argparse.ArgumentParser(
@@ -20,6 +26,7 @@ class Goji(object):
 
    process    Process gitops jobs
    requeue    Requeues a job which is in a failed or unknown state
+   init       Scaffold a new jobs directory
 
 ''')
 
@@ -51,6 +58,12 @@ class Goji(object):
   def requeue(self):
     pass
 
+  def init(self):
+    if os.path.exists('jobs'):
+      exit(1)
+    else:
+      for d in map(lambda x: os.path.join("jobs", x), ["queued", "succeeded", "failed", "unknown"]):
+        make_empty_git_dir(d)
 
 if __name__ == '__main__':
   Goji()
