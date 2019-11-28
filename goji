@@ -34,7 +34,15 @@ class Goji(object):
     getattr(self, args.command)()
 
   def process(self):
-    pass
+    parser = argparse.ArgumentParser(
+               description='''Process all queued jobs and update state of running jobs
+
+  Possible states:
+    queued    - Will be run during the next process
+    succeeded - The job succeeded
+    failed    - The job failed and can be requeued
+    unknown   - Job is missing and success/failure cannot be determined
+''')
 
   def requeue(self):
     pass
