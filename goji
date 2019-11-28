@@ -23,18 +23,25 @@ def make_empty_git_dir(dir_name):
   f = open(os.path.join(dir_name, ".gitkeep"), "w+")
   f.close()
 
+def list_job_files(state):
+  return list(filter(is_job_file, os.listdir(os.path.join("jobs", state))))
+
 # Checks for any duplicate jobs
 # A job is considered a duplicate if it is present in the queued
 # directory and one other directory
 def duplicate_jobs():
   global job_states
-  search_states = [i for i in job_states if not i == "queued"]
-  existing_jobs = set(filter(lambda a: a.endswith(".yaml"),
-    functools.reduce(lambda a,b: a.union(set(os.listdir("jobs/" + b))),
-      search_states, set([]))))
+  search_states = filter(lambda x: x != "queued", job_states)
+  existing_jobs = set(
+    functools.reduce(lambda a,b: a.union(set(list_job_files(b))),
+      search_states, set([])))
 
-  queued_jobs = set(os.listdir("jobs/queued"))
+  queued_jobs = set(list_job_files("queued"))
+
   return existing_jobs.intersection(queued_jobs)
+
+def is_job_file(file):
+  return file.endswith(".yaml")
 
 class Goji(object):
   def __init__(self):
