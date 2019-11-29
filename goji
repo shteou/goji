@@ -7,7 +7,7 @@ import sys
 
 from git import Repo
 
-job_states = ["queued", "succeeded", "failed", "unknown"]
+job_states = ["queued", "processing", "succeeded", "failed", "unknown"]
 
 def move_job(file, state, next_state):
   pass
