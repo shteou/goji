@@ -13,10 +13,23 @@ def move_job(file, state, next_state):
   pass
 
 def apply_job(file):
-  pass
+  return True
 
-def apply_jobs():
-  pass
+def move_job(filename, source_state, destination_state):
+  print(f"Moving {filename} from {source_state} to {destination_state}")
+  repo = Repo("jobs")
+  repo.index.move([os.path.join(source_state, filename), os.path.join(destination_state, filename)])
+  repo.index.commit(f"{filename} transitioned from {source_state} to {destination_state}")
+  origin = repo.remote(name='origin')
+  origin.push()
+
+def process_jobs(jobs):
+  for job in jobs:
+    success = apply_job(job)
+    if success == True:
+      move_job(job, "queued", "processing")
+    else:
+      move_job(job, "queued", "failed")
 
 def make_empty_git_dir(dir_name):
   os.makedirs(dir_name)
@@ -83,6 +96,7 @@ class Goji(object):
       print("Error, found the following duplicate jobs: ", duplicates)
       sys.exit(1)
 
+    process_jobs(list_job_files("queued"))
 
   def requeue(self):
     pass
