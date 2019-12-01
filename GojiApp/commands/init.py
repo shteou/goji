@@ -3,7 +3,7 @@ import git
 
 from GojiApp.dir_tools import make_empty_git_dir
 
-def init(repository):
+def command_init(repository):
     if os.path.exists('jobs'):
       print("jobs directory already exists... skipping")
     elif repository:
