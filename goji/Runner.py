@@ -4,11 +4,11 @@ import argparse
 import os
 import sys
 
-from GojiApp.commands.init import command_init
-from GojiApp.commands.process import command_process
-from GojiApp.commands.template import command_template
-from GojiApp.jobs import *
-from GojiApp.dir_tools import *
+from goji.commands.init import command_init
+from goji.commands.process import command_process
+from goji.commands.template import command_template
+from goji.jobs import *
+from goji.dir_tools import *
 
 class Goji(object):
   def __init__(self, main_args):
