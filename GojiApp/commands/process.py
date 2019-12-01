@@ -4,7 +4,7 @@ from GojiApp.jobs import *
 
 # Applies all queued jobs and transitions to processing/failed
 # as required
-def process(jobs):
+def command_process(jobs):
   print(f"Processing jobs: {jobs}")
   print("Checking for duplicate jobs")
   duplicates = duplicate_jobs()

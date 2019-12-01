@@ -4,8 +4,9 @@ import argparse
 import os
 import sys
 
-from GojiApp.commands.init import init
-from GojiApp.commands.process import process
+from GojiApp.commands.init import command_init
+from GojiApp.commands.process import command_process
+from GojiApp.commands.template import command_template
 from GojiApp.jobs import *
 from GojiApp.dir_tools import *
 
@@ -13,7 +14,7 @@ class Goji(object):
   def __init__(self, main_args):
     self.main_args = main_args
     parser = argparse.ArgumentParser(
-             description='Runs one off jobs on Kubernetes',
+             description="Runs one off jobs on Kubernetes",
              usage='''goji <command> [<args>]
 
    process    Process gitops jobs
@@ -43,14 +44,30 @@ class Goji(object):
     failed    - The job failed and can be requeued
     unknown   - Job is missing and success/failure cannot be determined
 ''')
-    parser.add_argument('--repository')
+    parser.add_argument("--repository")
     args = parser.parse_args(self.main_args[2:])
 
-    process(list_job_files("queued"))
+    command_process(list_job_files("queued"))
 
 
   def requeue(self):
     pass
+
+  def template(self):
+    parser = argparse.ArgumentParser(
+               description='''Creates a new job from the supplied template and params
+
+  Valid templates are:
+    basic-job
+''')
+
+    parser.add_argument("template", help="Selects the desired built-in template or template file")
+    parser.add_argument("job_name", help="Define the name of the job")
+    parser.add_argument("image", help="Define the container image of the job" )
+    parser.add_argument("filename", help="Define the output filename of the job" )
+    args = parser.parse_args(self.main_args[2:])
+
+    command_template(args)
 
 
   def init(self):
@@ -60,7 +77,7 @@ class Goji(object):
   If no repository is provided, scaffolds a new jobs repository
 ''')
 
-    parser.add_argument('--repository', help="Specifies an existing jobs repository to clone")
+    parser.add_argument("--repository", help="Specifies an existing jobs repository to clone")
     args = parser.parse_args(self.main_args[2:])
 
-    init(args.repository)
+    command_init(args.repository)
