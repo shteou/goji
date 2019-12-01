@@ -2,7 +2,7 @@
 
 import sys
 
-from GojiApp import Runner
+from goji import Runner
 
-if __name__ == '__main__':
+def main():
   Runner.Goji(sys.argv)

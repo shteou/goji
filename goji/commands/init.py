@@ -1,7 +1,8 @@
 import os
 import git
 
-from GojiApp.dir_tools import make_empty_git_dir
+from goji.dir_tools import make_empty_git_dir
+from goji.jobs import job_states
 
 def command_init(repository):
     if os.path.exists('jobs'):

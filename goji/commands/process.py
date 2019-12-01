@@ -1,11 +1,10 @@
 import sys
 
-from GojiApp.jobs import *
+from goji.jobs import *
 
 # Applies all queued jobs and transitions to processing/failed
 # as required
 def command_process(jobs):
-  print(f"Processing jobs: {jobs}")
   print("Checking for duplicate jobs")
   duplicates = duplicate_jobs()
   if bool(duplicates):
@@ -13,6 +12,7 @@ def command_process(jobs):
     sys.exit(1)
   print("No duplicates found")
 
+  print(f"Processing jobs: {jobs}")
   for job in jobs:
     try:
       print(f"Processing {job}")
