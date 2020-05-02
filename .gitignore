@@ -1,2 +1,7 @@
 jobs
 __pycache__
+build/
+dist/
+goji.egg-info/
+venv/
+.vscode/
