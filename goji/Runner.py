@@ -29,9 +29,9 @@ class Goji(object):
     args = parser.parse_args(self.main_args[1:2])
 
     if not hasattr(self, args.command):
-            print(args.command + ' is not a valid command')
-            parser.print_help()
-            exit(1)
+      print(args.command + ' is not a valid command')
+      parser.print_help()
+      exit(1)
 
     getattr(self, args.command)()
 

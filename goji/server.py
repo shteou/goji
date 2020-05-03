@@ -5,6 +5,7 @@ import git
 from flask import Flask
 from flask import request
 
+from goji.logger import log
 from goji.commands import process
 from goji.jobs import list_job_files
 
@@ -24,15 +25,15 @@ def worker():
     repo = None
 
     if os.path.exists('jobs'):
-      print("Pulling latest changes")
+      log.info("Pulling latest changes")
       repo = git.Repo('jobs')
       repo.remotes.origin.pull()
     elif repository:
-      print("Cloning jobs directory from {repository}")
+      log.info("Cloning jobs directory from {repository}")
       os.makedirs("jobs")
-      print("Cloning " + repository)
+      log.info("Cloning " + repository)
       repo = git.Repo.clone_from(repository, "jobs")
-      print("Done")
+      log.info("Done")
 
     jobs = list_job_files("queued")
     process.command_process(jobs)
@@ -47,9 +48,9 @@ def github_webhook():
 
   # TODO: Check secret and target repository matches expected repository
   if "before" in payload or "after" in payload:
-    print("Received webhook, checking for new queued jobs")
+    log.info("Received webhook, checking for new queued jobs")
     q.put("webhook event")
     return 'OK!'
   else:
-    print("Received webhook, but not interested")
+    log.info("Received webhook, but not interested")
     return 'OK!'

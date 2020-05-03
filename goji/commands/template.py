@@ -1,6 +1,8 @@
 import os
 import sys
 
+from goji.logger import log
+
 def templates(args):
     return {
         "basic-job": f'''
@@ -31,9 +33,9 @@ def command_template(args):
         new_job = template_file.read().format(args=args)
         with open(os.path.join("jobs", "queued", args.filename), "w+") as job_file:
           job_file.write(new_job)
-    print("Template created")
+    log.info("Template created")
 
   except Exception as e:
-    print("Template creation failed")
-    print(e)
-    print(e.args)
+    log.error("Template creation failed")
+    log.error(e)
+    log.error(e.args)
