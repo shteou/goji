@@ -12,7 +12,9 @@ def job_states():
 # Returns whether or the job was applied successfuly
 def apply_job(job_name):
   try:
-    k8s_config = config.load_kube_config()
+    print("Applying job {job_name}")
+    #k8s_config = config.load_kube_config()
+    k8s_config = config.load_incluster_config()
     k8s_client = client.api_client.ApiClient(configuration=k8s_config)
     create_from_yaml(k8s_client, f"jobs/queued/{job_name}")
   except Exception as e:
