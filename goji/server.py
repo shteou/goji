@@ -1,6 +1,4 @@
-import os, threading, queue
-
-import git
+import hashlib, hmac, git, os, threading, queue
 
 from flask import Flask
 from flask import request
@@ -46,8 +44,16 @@ threading.Thread(target=worker, daemon=True).start()
 def github_webhook():
   payload = request.get_json()
 
-  # TODO: Check secret and target repository matches expected repository
-  if "before" in payload or "after" in payload:
+  # log.info(request.get_data())
+  # log.info(type(request.get_data()))
+
+  digest_maker = hmac.new(os.environ["GITHUB_WEBHOOK_SECRET"].encode("utf-8"), bytearray(request.data), hashlib.sha1)
+  if not hmac.compare_digest(digest_maker.hexdigest(), request.headers.get('X-Hub-Signature').replace("sha1=", "")):
+    log.error("Invalid X-Hub-Signature in Github webhook call")
+    return "Not OK!"
+
+  # TODO: Check target repository matches expected repository
+  if ("before" in payload or "after" in payload):
     log.info("Received webhook, checking for new queued jobs")
     q.put("webhook event")
     return 'OK!'

@@ -71,3 +71,4 @@ githubUser: ""
 githubPat: ""
 githubRepo: ""
 defaultClusterRole: true
+githubWebhookSecret: ""
