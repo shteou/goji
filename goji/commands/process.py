@@ -7,13 +7,13 @@ from goji.jobs import *
 def command_process(jobs):
   print("Checking for duplicate jobs")
   duplicates = duplicate_jobs()
-  if bool(duplicates):
-    print("Error, found the following duplicate jobs: ", duplicates)
-    sys.exit(1)
-  print("No duplicates found")
+  if len(duplicates) > 0 :
+    print("Removing duplicate jobs")
+    delete_jobs("queued", duplicates, "Deleting duplicated jobs")
 
-  print(f"Processing jobs: {jobs}")
-  for job in jobs:
+  unique_jobs = [j for j in jobs if j not in duplicates]
+  print(f"Processing remaining jobs: {unique_jobs}")
+  for job in unique_jobs:
     try:
       print(f"Processing {job}")
       if apply_job(job):

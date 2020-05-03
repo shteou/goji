@@ -24,20 +24,18 @@ def worker():
     repo = None
 
     if os.path.exists('jobs'):
+      print("Pulling latest changes")
       repo = git.Repo('jobs')
       repo.remotes.origin.pull()
     elif repository:
+      print("Cloning jobs directory from {repository}")
       os.makedirs("jobs")
       print("Cloning " + repository)
       repo = git.Repo.clone_from(repository, "jobs")
       print("Done")
 
-    print("Fetching latest repository")
     jobs = list_job_files("queued")
-    print("Processing jobs")
     process.command_process(jobs)
-    print(jobs)
-
 
     q.task_done()
 
@@ -47,13 +45,11 @@ threading.Thread(target=worker, daemon=True).start()
 def github_webhook():
   payload = request.get_json()
 
-  print("Payload:")
-  print(payload)
-
   # TODO: Check secret and target repository matches expected repository
   if "before" in payload or "after" in payload:
-    # Trigger a process event
-    q.put("Event")
-    return 'Toot!'
+    print("Received webhook, checking for new queued jobs")
+    q.put("webhook event")
+    return 'OK!'
   else:
+    print("Received webhook, but not interested")
     return 'OK!'

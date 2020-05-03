@@ -1,3 +1,4 @@
+
 import functools
 import git
 import os
@@ -13,7 +14,7 @@ def job_states():
 def apply_job(job_name):
   try:
     print("Applying job {job_name}")
-    if os.environ["IN_CLUSTER"] == "true":
+    if "IN_CLUSTER" in os.environ and os.environ["IN_CLUSTER"] == "true":
       k8s_config = config.load_incluster_config()
     else:
       k8s_config = config.load_kube_config()
@@ -48,6 +49,15 @@ def list_job_files(state):
 # Is a file a valid job file, i.e. has a yaml extension
 def is_job_file(file):
   return file.endswith(".yaml")
+
+def delete_job(state, job, message):
+  delete_jobs(state, [job], message)
+
+def delete_jobs(state, jobs, message):
+  repo = git.Repo("jobs")
+  job_paths = [os.path.join(state, j) for j in jobs]
+  repo.index.remove(items=job_paths)
+  repo.git.commit(message=message)
 
 # Checks for any duplicate jobs
 # A job is considered a duplicate if it is present in the queued
