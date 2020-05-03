@@ -4,7 +4,7 @@ import goji.server
 from goji.logger import log
 
 def server(args):
-  http_server = WSGIServer(('', 8080), goji.server.app)
+  http_server = WSGIServer(('', 8080), goji.server.app, log=log)
   http_server.serve_forever()
   logging.setLogger(log)
 
