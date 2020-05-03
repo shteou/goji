@@ -40,6 +40,8 @@ spec:
               value: {{ .Values.githubRepo }}
             - name: GIT_ASKPASS
               value: "/usr/src/app/askpass.py"
+            - name: IN_CLUSTER
+              value: "true"
           ports:
             - name: http
               containerPort: 80
