@@ -1,4 +1,4 @@
-.git
-jobs
-venv
-upgrade-helm.sh
+.git/
+jobs/
+venv/
+charts/
