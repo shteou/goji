@@ -31,8 +31,8 @@ def apply_job(job_name):
 # Move a job from one state to another, creating a commit and pushing the result
 def move_job(filename, source_state, destination_state):
   log.info(f"Moving {filename} from {source_state} to {destination_state}")
+  repo = git.Repo("jobs")
   try:
-    repo = git.Repo("jobs")
     repo.index.move([os.path.join(source_state, filename), os.path.join(destination_state, filename)])
     log.info(f"Committing state transition for {filename}")
     commit = repo.index.commit(f"{filename} transitioned from {source_state} to {destination_state}")
@@ -43,6 +43,8 @@ def move_job(filename, source_state, destination_state):
   except Exception as e:
     log.error(f"Failed to move {filename}")
     log.error(e)
+    # Pull the latest. In case of remote changes, next operation should re-push changes
+    repo.remotes.origin.pull()
 
 # Lists all jobs (i.e. yaml files) within a given state
 def list_job_files(state):
