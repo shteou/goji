@@ -19,22 +19,26 @@ q = queue.Queue()
 def worker():
   while True:
     item = q.get()
-    repository = os.environ['GIT_REPOSITORY']
-    repo = None
+    # TODO: check queue size, is it not empty util we call task_done?
+    if not q.empty():
+      log.info("Skipped webhook, more pending")
+    else:
+      repository = os.environ['GIT_REPOSITORY']
+      repo = None
 
-    if os.path.exists('jobs'):
-      log.info("Pulling latest changes")
-      repo = git.Repo('jobs')
-      repo.remotes.origin.pull()
-    elif repository:
-      log.info("Cloning jobs directory from {repository}")
-      os.makedirs("jobs")
-      log.info("Cloning " + repository)
-      repo = git.Repo.clone_from(repository, "jobs")
-      log.info("Done")
+      if os.path.exists('jobs'):
+        log.info("Pulling latest changes")
+        repo = git.Repo('jobs')
+        repo.remotes.origin.pull()
+      elif repository:
+        log.info("Cloning jobs directory from {repository}")
+        os.makedirs("jobs")
+        log.info("Cloning " + repository)
+        repo = git.Repo.clone_from(repository, "jobs")
+        log.info("Done")
 
-    jobs = list_job_files("queued")
-    process.command_process(jobs)
+      jobs = list_job_files("queued")
+      process.command_process(jobs)
 
     q.task_done()
 
