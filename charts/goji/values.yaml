@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: shteou/goji
-  tag: gaas
+  tag: latest
   pullPolicy: Always
 
 imagePullSecrets: []
