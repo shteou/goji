@@ -25,6 +25,19 @@ The separate jobs repository should be configured to execute `goji process` (and
 `pip install -r requirements.txt`
 `./goji ...`
 
+# Installation as a helm chart
+
+The following values should be defined:
+
+- GIT_USERNAME          - The github username
+- GIT_PASSWORD          - The github password (or PAT)
+- GIT_REPOSITORY        - The jobs repository
+- GITHUB_WEBHOOK_SECRET - The secret configured in the webhook
+
+By default, a cluster-wide role will be installed with access to create batch jobs.
+This can be disabled by setting `defaultClusterRole` to false.
+In this case, (cluster)roles should be bound to the `goji` service account.
+
 # Usage
 
 ## Pre-requesities
