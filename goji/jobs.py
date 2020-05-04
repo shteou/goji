@@ -1,6 +1,9 @@
+
 import functools
 import git
 import os
+
+from goji.logger import log
 
 from kubernetes import client, config
 from kubernetes.utils import create_from_yaml
@@ -12,30 +15,36 @@ def job_states():
 # Returns whether or the job was applied successfuly
 def apply_job(job_name):
   try:
-    k8s_config = config.load_kube_config()
+    log.info("Applying job {job_name}")
+    if "IN_CLUSTER" in os.environ and os.environ["IN_CLUSTER"] == "true":
+      k8s_config = config.load_incluster_config()
+    else:
+      k8s_config = config.load_kube_config()
     k8s_client = client.api_client.ApiClient(configuration=k8s_config)
     create_from_yaml(k8s_client, f"jobs/queued/{job_name}")
   except Exception as e:
-    print(f"Failed to apply job {job_name}:")
-    print(e)
+    log.error(f"Failed to apply job {job_name}:")
+    log.error(e)
     return False
   return True
 
 # Move a job from one state to another, creating a commit and pushing the result
 def move_job(filename, source_state, destination_state):
-  print(f"Moving {filename} from {source_state} to {destination_state}")
+  log.info(f"Moving {filename} from {source_state} to {destination_state}")
+  repo = git.Repo("jobs")
   try:
-    repo = git.Repo("jobs")
     repo.index.move([os.path.join(source_state, filename), os.path.join(destination_state, filename)])
-    print(f"Committing state transition for {filename}")
+    log.info(f"Committing state transition for {filename}")
     commit = repo.index.commit(f"{filename} transitioned from {source_state} to {destination_state}")
-    print(f"Pushing commit {commit} for {filename}")
+    log.info(f"Pushing commit {commit} for {filename}")
     origin = repo.remote(name='origin')
     origin.push()
+    log.info(f"Successfully moved {filename}")
   except Exception as e:
-    print(f"Failed to move {filename}")
-    print(e)
-  print(f"Successfully moved {filename}")
+    log.error(f"Failed to move {filename}")
+    log.error(e)
+    # Pull the latest. In case of remote changes, next operation should re-push changes
+    repo.remotes.origin.pull()
 
 # Lists all jobs (i.e. yaml files) within a given state
 def list_job_files(state):
@@ -44,6 +53,15 @@ def list_job_files(state):
 # Is a file a valid job file, i.e. has a yaml extension
 def is_job_file(file):
   return file.endswith(".yaml")
+
+def delete_job(state, job, message):
+  delete_jobs(state, [job], message)
+
+def delete_jobs(state, jobs, message):
+  repo = git.Repo("jobs")
+  job_paths = [os.path.join(state, j) for j in jobs]
+  repo.index.remove(items=job_paths)
+  repo.git.commit(message=message)
 
 # Checks for any duplicate jobs
 # A job is considered a duplicate if it is present in the queued

@@ -6,6 +6,7 @@ import sys
 
 from goji.commands.init import command_init
 from goji.commands.process import command_process
+from goji.commands.server import command_server
 from goji.commands.template import command_template
 from goji.jobs import *
 from goji.dir_tools import *
@@ -20,6 +21,7 @@ class Goji(object):
    process    Process gitops jobs
    requeue    Requeues a job which is in a failed or unknown state
    init       Scaffold a new jobs directory
+   server     Run as a server, which processes new jobs via webhooks
 
 ''')
 
@@ -27,9 +29,9 @@ class Goji(object):
     args = parser.parse_args(self.main_args[1:2])
 
     if not hasattr(self, args.command):
-            print(args.command + ' is not a valid command')
-            parser.print_help()
-            exit(1)
+      print(args.command + ' is not a valid command')
+      parser.print_help()
+      exit(1)
 
     getattr(self, args.command)()
 
@@ -69,6 +71,15 @@ class Goji(object):
 
     command_template(args)
 
+  def server(self):
+    parser = argparse.ArgumentParser(
+               description='''Executes goji as a service
+''')
+
+    parser.add_argument("--repository", help="Specifies the jobs repository")
+    args = parser.parse_args(self.main_args[2:])
+
+    command_server(args.repository)
 
   def init(self):
     parser = argparse.ArgumentParser(

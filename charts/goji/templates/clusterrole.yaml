@@ -1,0 +1,10 @@
+{{- if .Values.defaultClusterRole -}}
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+ name: goji
+rules:
+- apiGroups: ["*"]
+  resources: ["*"]
+  verbs: ["create", "get", "describe", "list", "watch", "exec"]
+{{- end -}}
