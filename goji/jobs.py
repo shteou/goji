@@ -39,10 +39,10 @@ def move_job(filename, source_state, destination_state):
     log.info(f"Pushing commit {commit} for {filename}")
     origin = repo.remote(name='origin')
     origin.push()
+    log.info(f"Successfully moved {filename}")
   except Exception as e:
     log.error(f"Failed to move {filename}")
     log.error(e)
-  log.info(f"Successfully moved {filename}")
 
 # Lists all jobs (i.e. yaml files) within a given state
 def list_job_files(state):
