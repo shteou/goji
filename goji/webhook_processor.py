@@ -7,16 +7,18 @@ from goji.jobs import list_job_files
 WEBHOOK_INVALID_SECRET = "Invalid webhook signature"
 WEBHOOK_SUCCESS = "OK"
 
-def validate_github_webhook_secret(payload):
+def validate_github_webhook_secret(request):
   digest_maker = hmac.new(os.environ["GITHUB_WEBHOOK_SECRET"].encode("utf-8"), bytearray(request.data), hashlib.sha1)
   if not hmac.compare_digest(digest_maker.hexdigest(), request.headers.get('X-Hub-Signature').replace("sha1=", "")):
     log.error("Invalid X-Hub-Signature in Github webhook call")
     return False
   return True
 
-def process_github_webhook(payload):
-  if not validate_github_webhook_secret(payload):
+def process_github_webhook(request):
+  if not validate_github_webhook_secret(request):
     return WEBHOOK_INVALID_SECRET
+
+  payload = request.get_json()
 
   if ("before" in payload or "after" in payload):
     log.info("Received webhook, checking for new queued jobs")
