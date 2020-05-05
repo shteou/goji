@@ -42,7 +42,7 @@ spec:
             - name: GIT_REPOSITORY
               value: {{ .Values.githubRepo }}
             - name: GIT_ASKPASS
-              value: "/usr/src/app/askpass.py"
+              value: "/home/goji/askpass.py"
             - name: GITHUB_WEBHOOK_SECRET
               valueFrom:
                 secretKeyRef:
