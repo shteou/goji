@@ -16,9 +16,14 @@ COPY README.md .
 RUN python3 setup.py sdist bdist_wheel
 RUN pip install dist/*.whl
 
-WORKDIR /
-
 RUN rm -Rf /usr/src/app
+
+RUN groupadd -g 999 goji && \
+    useradd -mr -u 999 -g goji goji
+USER goji
+WORKDIR /home/goji
+
+COPY askpass.py .
 
 RUN git config --global user.email "goji-bot@goji"
 RUN git config --global user.name "Goji Bot"
