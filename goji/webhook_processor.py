@@ -4,10 +4,10 @@ from goji.logger import log
 from goji.commands import process
 from goji.jobs import list_job_files
 
-WEBHOOK_INVALID_SECRET = "Invalid webhook secret provided"
+WEBHOOK_INVALID_SECRET = "Invalid webhook signature"
 WEBHOOK_SUCCESS = "OK"
 
-repository = os.environ['GIT_REPOSITORY']
+job_repository = os.environ['GIT_REPOSITORY']
 q = queue.Queue()
 threading.Thread(target=worker, daemon=True).start()
 
@@ -30,6 +30,20 @@ def process_github_webhook(payload):
 
   return WEBHOOK_SUCCESS
 
+def pull_latest_job_repo():
+  log.info("Pulling latest changes")
+  repo = git.Repo('jobs')
+  repo.remotes.origin.pull()
+  return repo
+
+def clone_job_repo(repo):
+  log.info(f"Cloning jobs directory from {repo}")
+  os.makedirs("jobs")
+  log.info(f"Cloning {repo}")
+  repo = git.Repo.clone_from(repo, "jobs")
+  log.info("Done")
+
+
 def worker():
   while True:
     item = q.get()
@@ -37,15 +51,9 @@ def worker():
       log.info("Skipping current webhook, more webhooks are pending")
     else:
       if os.path.exists('jobs'):
-        log.info("Pulling latest changes")
-        repo = git.Repo('jobs')
-        repo.remotes.origin.pull()
-      elif repository:
-        log.info(f"Cloning jobs directory from {repository}")
-        os.makedirs("jobs")
-        log.info(f"Cloning {repository}")
-        repo = git.Repo.clone_from(repository, "jobs")
-        log.info("Done")
+        repo = pull_latest_job_repo()
+      elif job_repository:
+        repo = clone_job_repo(job_repository)
       else:
         log.error("GIT_REPOSITORY not defined, unable to clone jobs repo")
         sys.exit(-1)
