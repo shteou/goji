@@ -15,7 +15,7 @@ def job_states():
 # Returns whether or the job was applied successfuly
 def apply_job(job_name):
   try:
-    log.info("Applying job {job_name}")
+    log.info(f"Applying job {job_name}")
     if "IN_CLUSTER" in os.environ and os.environ["IN_CLUSTER"] == "true":
       k8s_config = config.load_incluster_config()
     else:
