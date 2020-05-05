@@ -11,7 +11,7 @@ def health():
 
 @app.route('/webhooks/github', methods=["POST"])
 def github_webhook():
-  response = process_github_webhook(request.get_json())
+  response = process_github_webhook(request)
 
   if response == WEBHOOK_INVALID_SECRET:
     return response, 400
