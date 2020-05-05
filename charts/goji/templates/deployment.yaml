@@ -35,13 +35,19 @@ spec:
             - name: GIT_USERNAME
               value: {{ .Values.githubUser }}
             - name: GIT_PASSWORD
-              value: {{ .Values.githubPat }}
+              valueFrom:
+                secretKeyRef:
+                  name: goji
+                  key: githubPat
             - name: GIT_REPOSITORY
               value: {{ .Values.githubRepo }}
             - name: GIT_ASKPASS
               value: "/usr/src/app/askpass.py"
             - name: GITHUB_WEBHOOK_SECRET
-              value: {{ .Values.githubWebhookSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: goji
+                  key: githubWebhookSecret
             - name: IN_CLUSTER
               value: "true"
           ports:
