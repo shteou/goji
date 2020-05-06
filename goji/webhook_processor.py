@@ -61,6 +61,6 @@ def worker():
 
     q.task_done()
 
-job_repository = os.environ['GIT_REPOSITORY']
+job_repository = os.environ['GIT_REPOSITORY'] if 'GIT_REPOSITORY' in os.environ else None
 q = queue.Queue()
 threading.Thread(target=worker, daemon=True).start()
