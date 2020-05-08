@@ -17,6 +17,8 @@ setuptools.setup(
     install_requires=[
           'gitpython',
           'kubernetes',
+          'Flask',
+          'gevent',
       ],
     classifiers=[
         "Programming Language :: Python :: 3",
