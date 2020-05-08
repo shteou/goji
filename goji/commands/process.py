@@ -1,4 +1,4 @@
-import sys
+import logger, sys
 
 from goji.logger import log
 from goji.jobs import *
@@ -14,15 +14,13 @@ def removeDuplicates(jobs):
   return [j for j in jobs if j not in duplicates]
 
 
-def process_job(job):
+def apply_job(job):
   try:
-    log.info(f"Processing {job}")
-    if apply_job(job):
-      move_job(job, "queued", "processing")
-      log.info(f"Processing {job} succeeded")
-    else:
-      move_job(job, "queued", "failed")
-      log.error(f"Processing {job} failed")
+    log.info(f"Applying queued job: {job}")
+    
+    log_level, new_state = (logger.INFO, "processing") if apply_job(job) else (logger.WARNING, "failed")
+    log.log(log_level, f"Applied queued {job}, new state is {new_state}")
+    move_job(job, "queued", new_state)
 
   except Exception as e:
     log.error(f"Encountered an unexpected exception whilst processing {job}")
@@ -33,8 +31,8 @@ def process_job(job):
 def command_process(jobs):
   unique_jobs = removeDuplicates(jobs)
 
-  log.info(f"Processing remaining jobs: {unique_jobs}")
+  log.info(f"Applying remaining queued jobs: {unique_jobs}")
   for job in unique_jobs:
-    process_job(job)
+    apply_job(job)
 
-  log.info("Finished processing jobs")
+  log.info("Finished applying queued jobs")
