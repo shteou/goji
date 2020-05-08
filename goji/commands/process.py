@@ -1,4 +1,4 @@
-import logger, sys
+import logging, sys
 
 from goji.logger import log
 from goji.jobs import *
@@ -18,7 +18,7 @@ def apply_job(job):
   try:
     log.info(f"Applying queued job: {job}")
     
-    log_level, new_state = (logger.INFO, "processing") if apply_job(job) else (logger.WARNING, "failed")
+    log_level, new_state = (logging.INFO, "processing") if apply_job(job) else (logging.WARNING, "failed")
     log.log(log_level, f"Applied queued {job}, new state is {new_state}")
     move_job(job, "queued", new_state)
 
