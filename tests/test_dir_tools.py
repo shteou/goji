@@ -5,7 +5,7 @@ from unittest import mock
 from mock import patch
 from goji.dir_tools import make_empty_git_dir 
 
-class MockingTestTestCase(unittest.TestCase):
+class DirToolsTestCase(unittest.TestCase):
     @patch('builtins.open')
     @patch('goji.dir_tools.os.makedirs')
     def test_make_empty_git_dir(self, makedirs, builtin_open):
