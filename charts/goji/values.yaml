@@ -7,7 +7,7 @@ replicaCount: 1
 
 image:
   repository: shteou/goji
-  tag: latest
+  tag: ""
   pullPolicy: Always
 
 imagePullSecrets: []
