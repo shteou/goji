@@ -1,5 +1,7 @@
 # goji
 
+![Python application](https://github.com/shteou/goji/workflows/Python%20application/badge.svg)
+
 Goji is a tool which can be integrated into a CD pipeline (e.g. with Jenkins) to provide a
 GitOps way of running one-off jobs.
 
