@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="goji",
-    version="0.0.1",
+    version="0.0.2",
     author="Stewart Platt",
     author_email="shteou@gmail.com",
     description="A GitOps tool for running jobs on k8s",
