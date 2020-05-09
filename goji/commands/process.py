@@ -1,20 +1,20 @@
 import logging, sys
 
 from goji.logger import log
-from goji.jobs import *
+from goji.jobs import apply_job, delete_jobs, duplicate_jobs, move_job 
 
-def removeDuplicates(jobs):
+def remove_duplicates(jobs):
   log.info("Checking for duplicate jobs")
   duplicates = duplicate_jobs()
 
   if len(duplicates) > 0 :
-    log.warn(f"Removing duplicate jobs: {duplicates}")
+    log.warning(f"Removing duplicate jobs: {duplicates}")
     delete_jobs("queued", duplicates, "Deleting duplicated jobs")
 
   return [j for j in jobs if j not in duplicates]
 
 
-def apply_job(job):
+def process_job(job):
   try:
     log.info(f"Applying queued job: {job}")
     
@@ -29,10 +29,10 @@ def apply_job(job):
 # Applies all queued jobs and transitions to processing/failed
 # as required
 def command_process(jobs):
-  unique_jobs = removeDuplicates(jobs)
+  unique_jobs = remove_duplicates(jobs)
 
   log.info(f"Applying remaining queued jobs: {unique_jobs}")
   for job in unique_jobs:
-    apply_job(job)
+    process_job(job)
 
   log.info("Finished applying queued jobs")
