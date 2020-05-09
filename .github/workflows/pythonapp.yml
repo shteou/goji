@@ -10,7 +10,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  build-python:
 
     runs-on: ubuntu-latest
 
