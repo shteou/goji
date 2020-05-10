@@ -7,6 +7,7 @@ from goji.logger import log
 
 from kubernetes import client, config
 from kubernetes.utils import create_from_yaml
+from os import environ, listdir
 
 def job_states():
   return ["queued", "processing", "succeeded", "failed", "unknown"]
@@ -16,7 +17,7 @@ def job_states():
 def apply_job(job_name):
   try:
     log.info(f"Applying job {job_name}")
-    if "IN_CLUSTER" in os.environ and os.environ["IN_CLUSTER"] == "true":
+    if "IN_CLUSTER" in environ and environ["IN_CLUSTER"] == "true":
       k8s_config = config.load_incluster_config()
     else:
       k8s_config = config.load_kube_config()
@@ -48,7 +49,7 @@ def move_job(filename, source_state, destination_state):
 
 # Lists all jobs (i.e. yaml files) within a given state
 def list_job_files(state):
-  return list(filter(is_job_file, os.listdir(os.path.join("jobs", state))))
+  return list(filter(is_job_file, listdir(os.path.join("jobs", state))))
 
 # Is a file a valid job file, i.e. has a yaml extension
 def is_job_file(file):
