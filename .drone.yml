@@ -7,4 +7,10 @@ steps:
   commands:
   - pip install -r requirements.txt
   - python -m unittest
-
+- name: doubletest
+  image: python
+  commands:
+  - python -m unittest
+  when:
+    event:
+    - push
