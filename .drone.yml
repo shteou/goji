@@ -13,6 +13,7 @@ steps:
 - name: doubletest
   image: python
   commands:
+  - pip install -r requirements.txt
   - python -m unittest
   when:
     event:
