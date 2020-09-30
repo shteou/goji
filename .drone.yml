@@ -1,0 +1,39 @@
+---
+name: test
+kind: pipeline
+
+steps:
+- name: test
+  image: python
+  commands:
+  - pip install -r requirements.txt
+  - python -m unittest
+trigger:
+  ref:
+  - refs/pull/*/head
+---
+name: second-test
+kind: pipeline
+
+steps:
+- name: doubletest
+  image: python
+  commands:
+  - pip install -r requirements.txt
+  - python -m unittest
+trigger:
+  ref:
+  - refs/pull/*/head
+---
+name: master
+kind: pipeline
+
+steps:
+- name: test
+  image: python
+  commands:
+  - pip install -r requirements.txt
+  - python -m unittest
+trigger:
+  ref:
+  - refs/heads/drone
