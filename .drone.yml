@@ -1,4 +1,6 @@
+---
 name: default
+kind: kubernetes
 
 steps:
 - name: test
@@ -16,6 +18,7 @@ trigger:
   - refs/pull/*/head
 ---
 name: master
+kind: kubernetes
 
 steps:
 - name: test
