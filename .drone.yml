@@ -12,3 +12,7 @@ steps:
   commands:
   - pip install -r requirements.txt
   - python -m unittest
+trigger:
+  ref:
+  - refs/pull/*/head
+
