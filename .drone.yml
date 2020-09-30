@@ -12,8 +12,3 @@ steps:
   commands:
   - pip install -r requirements.txt
   - python -m unittest
-trigger:
-  event:
-  - push
-  ref:
-  - refs/pull/**
