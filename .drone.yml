@@ -36,5 +36,4 @@ steps:
   - python -m unittest
 trigger:
   ref:
-  - refs/heads/master
-
+  - refs/heads/drone
