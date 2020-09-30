@@ -7,14 +7,28 @@ steps:
   commands:
   - pip install -r requirements.txt
   - python -m unittest
-  when:
-    event:
-    - push
 - name: doubletest
   image: python
   commands:
   - pip install -r requirements.txt
   - python -m unittest
-  when:
-    event:
-    - push
+trigger:
+  event:
+  - push
+  ref:
+  - refs/pull/**
+---
+kind: pipeline
+name: master
+
+steps:
+- name: test
+  image: python
+  commands:
+  - pip install -r requirements.txt
+  - python -m unittest
+trigger:
+  event:
+  - push
+  branch:
+  - master
