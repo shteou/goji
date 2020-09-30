@@ -1,5 +1,5 @@
 ---
-name: default
+name: test
 kind: pipeline
 
 steps:
@@ -8,6 +8,14 @@ steps:
   commands:
   - pip install -r requirements.txt
   - python -m unittest
+trigger:
+  ref:
+  - refs/pull/*/head
+---
+name: second-test
+kind: pipeline
+
+steps:
 - name: doubletest
   image: python
   commands:
