@@ -1,6 +1,6 @@
 ---
 name: default
-kind: docker
+kind: pipeline
 
 steps:
 - name: test
@@ -18,7 +18,7 @@ trigger:
   - refs/pull/*/head
 ---
 name: master
-kind: docker
+kind: pipeline
 
 steps:
 - name: test
