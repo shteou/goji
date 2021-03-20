@@ -10,7 +10,7 @@ google-auth==1.7.1
 greenlet==0.4.15
 idna==2.8
 itsdangerous==1.1.0
-Jinja2==2.11.2
+Jinja2==2.11.3
 kubernetes==10.0.1
 MarkupSafe==1.1.1
 mock==4.0.2
